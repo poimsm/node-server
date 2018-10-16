@@ -10,7 +10,7 @@ app.get('/usuario', verificaToken, (req, res) => {
     let desde = req.query.desde || 0;
     desde = Number(desde);
     let limite = req.query.limite || 2;
-    desde = Number(limite);
+    limite = Number(limite);
     Usuario.find({google: false}, 'nombre email')
             .skip(desde)
             .limit(limite)
