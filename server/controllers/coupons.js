@@ -18,7 +18,9 @@ module.exports = {
     const img = body.img.url;
 
     data = await cloudinary.uploader.upload(img);    
-    body.img = { url: data.url, id: data.public_id }; 
+    body.img = { url: data.url, id: data.public_id };
+
+    body.timeStamp = new Date().getTime();
 
     await coupon.create(body);
     res.status(200).json();
