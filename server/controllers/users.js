@@ -2,6 +2,10 @@ const JWT = require('jsonwebtoken');
 const User = require('../models/user');
 //se hizo de una rama distinta
 //algo mas
+//git branch nombre-rama
+//git checkout nombre-rama
+//git checkout -b nombre-rama
+//git push origin nombre-rama
 signToken = user => {
   // return JWT.sign({
   //   iss: 'Joopiter',
