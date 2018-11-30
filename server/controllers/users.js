@@ -1,6 +1,7 @@
 const JWT = require('jsonwebtoken');
 const User = require('../models/user');
-
+//se hizo de una rama distinta
+//algo mas
 signToken = user => {
   // return JWT.sign({
   //   iss: 'Joopiter',
