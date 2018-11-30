@@ -10,8 +10,14 @@ process.env.JWT_SECRET = process.env.JWT_SECRET || 'el-seed-de-desarrollo';
 
 //  MongoDB
 let urlDB;
+process.env.MONGO_USER = process.env.MONGO_USER || 'root';
+process.env.MONGO_PWD = process.env.MONGO_PWD || 'lospri133';
+console.log(process.env.MONGO_USER)
+const urlMLAB = `mongodb://${process.env.MONGO_USER}:${process.env.MONGO_PWD}@ds043987.mlab.com:43987/cafe-joopiter`;
+console.log(urlMLAB);
 if (process.env.NODE_ENV == 'dev') {
-    urlDB = 'mongodb://localhost:27017/cafe';
+    //urlDB = 'mongodb://localhost:27017/cafe';
+    urlDB = urlMLAB;
 } else {
     urlDB = process.env.MONGO_URI;
 }
