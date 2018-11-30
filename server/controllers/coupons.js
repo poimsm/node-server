@@ -15,37 +15,34 @@ module.exports = {
   create: async (req, res, next) => {
 
     const body = req.body;
-    const img = body.img.url;
+    const img = body.img;    
 
     data = await cloudinary.uploader.upload(img);    
     body.img = { url: data.url, id: data.public_id };
 
-    body.timeStamp = new Date().getTime();
+    body.created = new Date().getTime();
+    body.user = req.user._id; 
 
-    await coupon.create(body);
+    await Coupon.create(body);
     res.status(200).json();
   },
 
   all: async (req, res, next) => {
 
-    const desde = req.query.desde || 0;
-    const limite = req.query.limite || 2;
+    let skip = req.query.skip;
+    let limite = req.query.limite;
+    let category = req.query.category;
 
-    desde = Number(desde);
+    skip = Number(skip);
     limite = Number(limite);
 
-    Coupon.find({})
-    // .skip(desde)
-    // .limit(limite)
-    // .sort('category')
-    // .populate('user', 'name')
-    .exec((err, cupones) => {
+    let filter = {};
 
-        if (err) {
-            return res.status(500).json({ err  });
-        }
-        res.status(200).json({ cupones });
-    })
+    category == 'Destacado'? filter = { destacado: true } : filter = { category };
+
+    const data = await Coupon.find(filter).skip(skip).limit(limite);
+
+    res.status(200).json(data);
   },
 
   one: async (req, res, next) => {

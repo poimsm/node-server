@@ -5,22 +5,20 @@ var ticketSchema = new Schema({
     category: { type: String },
     title: { type: String },
     description: { type: String},
-    price: { type: Number },
-    imgs: { type: String },
-    hours: { type: Object},
-    duration: { type: String },
+    price: { type: Number },    
+    duration: { type: String },    
     site: { type: String },
+    imgs: { type: Object },
+    hours: { type: Object},
     lists: { type: Object },
-    isListActive: { type: Boolean },
-    timestamp: { type: Number },
+    activeDays: { type: Object },
+    created: { type: Number },
     user: { type: Schema.Types.ObjectId, ref: 'User' },
     buys: { type: Number },
-    reviews: { type: Number },
     totalStartsGiven: { type: Number },
     sumAllStarts: { type: Number },
-    startsAverage: { type: Number },
-    isActive: { type: Boolean, required: true, default: true }
+    startsAverage: { type: Number }
 });
 
 
-module.exports = mongoose.model('Ticket_service', ticketSchema);
+module.exports = mongoose.model('explore_service', ticketSchema);

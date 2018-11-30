@@ -2,23 +2,22 @@ const express = require('express');
 const router = require('express-promise-router')();
 const passport = require('passport');
 
-const endPoint = 'packs';
 const controller = require('../controllers/packs');
 const passportJWT = passport.authenticate('jwt', { session: false });
 
-router.route(endPoint)
+router.route('/packs')
   .get(passportJWT, controller.all);
 
-router.route(`/${endPoint}/:id`)
+router.route('/packs/:id')
   .get(passportJWT, controller.one);
 
-router.route(endPoint)
+router.route('/packs')
   .post(passportJWT, controller.create);
 
-router.route(`/${endPoint}/:id`)
+router.route('/packs/:id')
   .put(passportJWT, controller.update);
 
-router.route(`/${endPoint}/:id`)
+router.route('/packs/:id')
   .delete(passportJWT, controller.delete);
 
 module.exports = router;

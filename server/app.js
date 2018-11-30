@@ -27,11 +27,10 @@ app.use( express.static( path.resolve(__dirname, '../public') ))
 // configuración de rutas
 app.use('/users', require('./routes/users'));
 app.use('/apps', require('./routes/coupons'));
-app.use('/apps', require('./routes/ticket-events'));
-app.use('/apps', require('./routes/ticket-services'));
 app.use('/apps', require('./routes/food'));
 app.use('/apps', require('./routes/packs'));
-app.use('/apps/delivery/', require('./routes/delivery'));
+app.use('/apps', require('./routes/explore'));
+app.use('/apps', require('./routes/delivery'));
 
 
 

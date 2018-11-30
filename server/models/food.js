@@ -5,17 +5,17 @@ var ticketSchema = new Schema({
     category: { type: String },
     title: { type: String },
     price: { type: Number },
-    img: { type: String },
+    img: {
+        id: { type: String },
+        url: { type: String }
+    },
     lists: { type: Object },
-    isListActive: { type: Boolean },
-    timestamp: { type: Number },
+    created: { type: Number },
     user: { type: Schema.Types.ObjectId, ref: 'User' },
     buys: { type: Number },
-    reviews: { type: Number },
     totalStartsGiven: { type: Number },
     sumAllStarts: { type: Number },
-    startsAverage: { type: Number },
-    isActive: { type: Boolean, required: true, default: true }
+    startsAverage: { type: Number }
 });
 
 

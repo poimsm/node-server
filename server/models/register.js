@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 
 var hoursRegisterSchema = new Schema({
     day: { type: String },
-    date: { type: Number },
+    created: { type: Number },
     isActive: { type: Boolean },
     hours: {
         one: { type: Number },

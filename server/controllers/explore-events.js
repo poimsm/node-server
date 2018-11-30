@@ -1,6 +1,6 @@
 const JWT = require('jsonwebtoken');
 const cloudinary = require("cloudinary");
-const Ticket = require('../models/ticket-event');
+const Eventt = require('../models/explore-event');
 
 
 cloudinary.config({
@@ -26,29 +26,6 @@ module.exports = {
   create: async (req, res, next) => {
 
     const body = req.body; 
-    const ticket = new Ticket({
-        category: body.category,
-        title: body.title,
-        description: body.description,
-        quota: body.quota,
-        price: body.price,
-        imgs: {},
-        initHour: body.initHour,
-        endHour: body.endHour,
-        site: body.site,
-        timestamp: new Date().getTime(),
-        user: req.user._id,
-        buys: body.initDate,
-        reviews: 0,
-        totalStartsGiven: 0,
-        sumAllStarts: 0,
-        startsAverage: 0
-    });
-
-    const test = {
-        0: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==",
-        1: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="
-    }
 
     const imgs = [];
 
@@ -70,14 +47,18 @@ module.exports = {
             uploadsObj[i] = upload
         })
    
-        ticket.imgs = uploadsObj;  
-    
-        ticket.save((err, ticketDB) => {
+        body.imgs = uploadsObj;
+        body.created = new Date().getTime();
+        body.user = req.user._id;   
+        
+        const event = new Eventt(body);
+        
+        event.save((err, serviceDB) => {
     
             if (err) {
                 return res.status(500).json();
             }        
-            res.status(200).json({ ticketDB });  
+            res.status(200).json();  
     
         });    
 

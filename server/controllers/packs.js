@@ -1,6 +1,6 @@
 const JWT = require('jsonwebtoken');
 const cloudinary = require("cloudinary");
-const Food = require('../models/pack');
+const Pack = require('../models/pack');
 
 
 cloudinary.config({
@@ -14,40 +14,17 @@ module.exports = {
 
   create: async (req, res, next) => {
 
-    const body = req.body; 
-    const pack = new Pack({
-        category: body.category,
-        title: body.title,
-        price: body.price,
-        img: "",
-        lists: body.lists,
-        isListActive: body.isListActive,
-        timestamp: new Date().getTime(),
-        user: req.user._id,
-        buys: body.buys,
-        reviews: body.reviews,
-        totalStartsGiven: body.totalStartsGiven,
-        sumAllStarts: body.sumAllStarts,
-        startsAverage: body.startsAverage
-    });
+    const body = req.body;
+    const img = body.img;    
 
-    const img = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==";
+    data = await cloudinary.uploader.upload(img);    
+    body.img = { url: data.url, id: data.public_id };
 
-    cloudinary.uploader.upload(img, 
-        function(result) { 
+    body.created = new Date().getTime();
+    body.user = req.user._id;   
 
-            pack.img.url = result.url;
-            pack.img.id = result.public_id;
-
-            pack.save((err, packDB) => {
-
-                if (err) {
-                    return res.status(500).json();
-                }        
-                res.status(200).json({ packDB });  
-        
-            });
-        });
+    await Pack.create(body);
+    res.status(200).json();
   },
 
   all: async (req, res, next) => {

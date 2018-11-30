@@ -14,40 +14,17 @@ module.exports = {
 
   create: async (req, res, next) => {
 
-    const body = req.body; 
-    const food = new Food({
-        category: body.category,
-        title: body.title,
-        price: body.price,
-        img: "",
-        lists: body.lists,
-        isListActive: body.isListActive,
-        timestamp: new Date().getTime(),
-        user: req.user._id,
-        buys: body.buys,
-        reviews: body.reviews,
-        totalStartsGiven: body.totalStartsGiven,
-        sumAllStarts: body.sumAllStarts,
-        startsAverage: body.startsAverage
-    });
+    const body = req.body;
+    const img = body.img;    
 
-    const img = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==";
+    data = await cloudinary.uploader.upload(img);    
+    body.img = { url: data.url, id: data.public_id };
 
-    cloudinary.uploader.upload(img, 
-        function(result) { 
+    body.created = new Date().getTime();
+    body.user = req.user._id;    
 
-            food.img.url = result.url;
-            food.img.id = result.public_id;
-
-            food.save((err, foodDB) => {
-
-                if (err) {
-                    return res.status(500).json();
-                }        
-                res.status(200).json({ foodDB });  
-        
-            });
-        });
+    await Food.create(body);
+    res.status(200).json();
   },
 
   all: async (req, res, next) => {

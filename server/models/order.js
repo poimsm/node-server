@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 
 var orderSchema = new Schema({
     price: { type: Number },
-    date: { type: Number },
+    created: { type: Number },
     storeId: { type: String },
     storeName: { type: String },
     storeAdress: { type: String },

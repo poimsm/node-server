@@ -5,23 +5,19 @@ var couponSchema = new Schema({
     category: { type: String },
     title: { type: String },
     description: { type: String },
-    quota: { type: Number },
     price: { type: Number },
+    discountPrice: { type: Number },
     img: {
-        id: {
-          type: String
-        },
-        url: { 
-          type: String
-        }
-    },
+      id: { type: String },
+      url: { type: String }
+     },
     initDate: { type: String },
     endDate: { type: String },    
     conditions: { type: Object },
-    timestamp: { type: Number },
+    created: { type: Number },
     user: { type: Schema.Types.ObjectId, ref: 'User' },
     buys: { type: Number },
-    isActive: { type: Boolean, required: true, default: true }
+    destacado: { type: Boolean }    
 });
 
 

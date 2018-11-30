@@ -6,7 +6,7 @@ var storeSchema = new Schema({
     category: { type: String },
     name: { type: String },
     phone: { type: Number },
-    date: { type: Number },
+    created: { type: Number },
     isActive: { type: Boolean, default: true }
 });
 
