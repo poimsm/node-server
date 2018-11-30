@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var ticketSchema = new Schema({ 
+var exploreServiceSchema = new Schema({ 
     category: { type: String },
     title: { type: String },
     description: { type: String},
@@ -21,4 +21,4 @@ var ticketSchema = new Schema({
 });
 
 
-module.exports = mongoose.model('explore_service', ticketSchema);
+module.exports = mongoose.model('explore_service', exploreServiceSchema);

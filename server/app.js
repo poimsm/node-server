@@ -36,7 +36,7 @@ app.use('/apps', require('./routes/delivery'));
 
 mongoose.connect(process.env.URLDB, (err, res) => {
     if (err) throw err;
-    console.log("Base de dtaos ONLINE");    
+    console.log("Base de datos ONLINE");    
 });
  
 app.listen(process.env.PORT , ()=>{

@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var ticketSchema = new Schema({ 
+var exploreEventSchema = new Schema({ 
     category: { type: String },
     title: { type: String },
     description: { type: String },
@@ -16,4 +16,4 @@ var ticketSchema = new Schema({
 });
 
 
-module.exports = mongoose.model('explore_event', ticketSchema);
+module.exports = mongoose.model('explore_event', exploreEventSchema);

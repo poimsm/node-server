@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var ticketSchema = new Schema({ 
+var foodSchema = new Schema({ 
     category: { type: String },
     title: { type: String },
     price: { type: Number },
@@ -19,4 +19,4 @@ var ticketSchema = new Schema({
 });
 
 
-module.exports = mongoose.model('Food', ticketSchema);
+module.exports = mongoose.model('Food', foodSchema);
