@@ -12,7 +12,7 @@ router.route('/jobs/apply')
   .post(passportJWT, applyController.create);
 
 router.route('/jobs/all')
-  .post(passportJWT, applyController.all);
+  .get(passportJWT, applyController.all);
 
 router.route('/jobs/resolution/:id')
   .post(passportJWT, applyController.resolution);

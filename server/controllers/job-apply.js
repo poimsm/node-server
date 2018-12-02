@@ -20,7 +20,7 @@ module.exports = {
     let status = 200; //server
     let statusApp = 200;
     let response = {
-      message:messages.message.shopper.delivery_request_created , 
+      message: messages.message.shopper.delivery_request_created , 
       status: statusApp,
       data: body
     };
@@ -30,7 +30,7 @@ module.exports = {
     //validate if application exists already
     formerApply = await JobApply.findOne({userId: body.userId});
     if (formerApply){      
-      response.message =  message:messages.message.shopper.delivery_failed;
+      response.message =  messages.message.shopper.delivery_failed;
       response.status = 401;
       
     }else{
@@ -87,7 +87,7 @@ module.exports = {
     let statusApp = 200;
     let response = {
       data: [],
-      message: 'OK'
+      message: 'OK',
       status: statusApp
     }
     const defaultNumberOfRecords = 20;
