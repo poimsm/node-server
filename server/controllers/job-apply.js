@@ -91,16 +91,16 @@ module.exports = {
       status: statusApp
     }
     const defaultNumberOfRecords = 20;
-    const page = req.query.page || 1;    
+    const page = req.query.page || 0;    
     const records = req.query.records || defaultNumberOfRecords;
-    let pageNumber = 1;
+    let pageNumber = 0;
     let numberOfRecords = defaultNumberOfRecords;
     //check inputs is not numeric
     if(! (/^\d+$/.test(page)) ){
-      pageNumber=1;
-      numberOfRecords=0;
-      response.status = 400;
-      response.message = 'No numeric value';
+      pageNumber        = 0;
+      numberOfRecords   = 0;
+      response.status   = 400;
+      response.message  = messages.message.general.not_a_number;
     }else{
       if(Number(page) > 1){
         pageNumber = Number(page)*numberOfRecords;
@@ -108,7 +108,10 @@ module.exports = {
       numberOfRecords = Number(records);
 
     }
-    const data = await JobApply.find().skip(pageNumber).limit(numberOfRecords);
+    console.log(pageNumber);
+    console.log(numberOfRecords);
+    const data = await JobApply.find({isActive:true}).skip(pageNumber).limit(numberOfRecords);
+    console.log(data);
     response.data = data;
     res.status(status).json(response);
   }
