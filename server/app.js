@@ -31,6 +31,7 @@ app.use('/apps', require('./routes/food'));
 app.use('/apps', require('./routes/packs'));
 app.use('/apps', require('./routes/explore'));
 app.use('/apps', require('./routes/delivery'));
+app.use('/admin', require('./routes/admin'));
 
 
 
