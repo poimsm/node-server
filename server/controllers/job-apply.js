@@ -2,6 +2,7 @@ const JWT = require('jsonwebtoken');
 const cloudinary = require("cloudinary");
 
 const JobApply = require('../models/job-apply');
+const Shopper = require('../models/shopper');
 const messages = require('./messages');
 
 
@@ -16,41 +17,79 @@ module.exports = {
 
   create: async (req,res,next) =>{
     const body = req.body;
-    let response = {'message':messages.message.shooper.delivery_request_created};
-    let status = 200;
+    let status = 200; //server
+    let statusApp = 200;
+    let response = {
+      message:messages.message.shopper.delivery_request_created , 
+      status: statusApp,
+      data: body
+    };
     
     body.userId = req.user._id;
-    body.create = 2;
-    body.isActive = false;
+    body.create = time();    
     //validate if application exists already
     formerApply = await JobApply.findOne({userId: body.userId});
-    if (formerApply){
-      status = 401;
-      response = {'message':messages.message.shooper.delivery_failed};
+    if (formerApply){      
+      response.message =  message:messages.message.shopper.delivery_failed;
+      response.status = 401;
+      
     }else{
       mongoModel = await JobApply.create(body);  
     }
     res.status(status).json(response);
 
   },
-  accept: async (req, res, next) => {
+  resolution: async (req, res, next) => {
 
     let status = 200;
+    let statusApp = 200;
     const id = req.params.id;
     const body = req.body;
-    let message = "hola";
-    const update = { isActive: true }
+    let response = {
+      message: messages.message.shopper.admin_accepted,
+      status: statusApp,
+      data: body
 
-    await JobApply.findOneAndUpdate({userId: id}, update);
+    };
+    const updateJobApply = { isAccepted: body.accepted, isActive:body.accepted }
+    const updateShopper = { isActive:body.accepted }
+    if(! body.accepted){      
+      response.message =  messages.message.shopper.admin_rejected;
+      response.status = 401;
+    }
+    responseModel = await JobApply.findOneAndUpdate({userId: id}, updateJobApply);
+    if (body.accepted){
+      console.log(responseModel);
+      formerShopper = await Shopper.findOne({userId: body.userId});
+      console.log(formerShopper);
+      if(! formerShopper){
+        let saveShopper = {
+          userId : responseModel.userId,
+          phone : responseModel.phone,
+          name : responseModel.name,
+          isActive: body.accepted
+        };
+        mongoModel = await Shopper.create(saveShopper);  
+      }else{
+        await Shopper.findOneAndUpdate({userId: id}, updateShopper);    
+      }
+
+    }
     
 
-    res.status(status).json(message);
+    res.status(status).json(response);
    
   },
 
   all: async (req, res, next) => {
 
     let status = 200;
+    let statusApp = 200;
+    let response = {
+      data: [],
+      message: 'OK'
+      status: statusApp
+    }
     const defaultNumberOfRecords = 20;
     const page = req.query.page || 1;    
     const records = req.query.records || defaultNumberOfRecords;
@@ -58,9 +97,10 @@ module.exports = {
     let numberOfRecords = defaultNumberOfRecords;
     //check inputs is not numeric
     if(! (/^\d+$/.test(page)) ){
-      status = 400;
       pageNumber=1;
       numberOfRecords=0;
+      response.status = 400;
+      response.message = 'No numeric value';
     }else{
       if(Number(page) > 1){
         pageNumber = Number(page)*numberOfRecords;
@@ -69,6 +109,7 @@ module.exports = {
 
     }
     const data = await JobApply.find().skip(pageNumber).limit(numberOfRecords);
-    res.status(status).json(data);
+    response.data = data;
+    res.status(status).json(response);
   }
 }

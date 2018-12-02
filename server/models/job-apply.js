@@ -6,6 +6,7 @@ var jobApplySchema = new Schema({
     name: { type: String },
     phone: { type: Number },
     created: { type: Number },
+    isAccepted: { type: Boolean, default: false },
     isActive: { type: Boolean, default: true }
 });
 
