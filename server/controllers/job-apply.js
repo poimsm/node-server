@@ -3,7 +3,8 @@ const cloudinary = require("cloudinary");
 
 const JobApply = require('../models/job-apply');
 const Shopper = require('../models/shopper');
-const messages = require('./messages');
+const appMessages = require('./utils/messages');
+const appStatus = require('./utils/app-status');
 
 
 cloudinary.config({
@@ -18,9 +19,9 @@ module.exports = {
   create: async (req,res,next) =>{
     const body = req.body;
     let status = 200; //server
-    let statusApp = 200;
+    let statusApp = appStatus.status.ok.code;
     let response = {
-      message: messages.message.shopper.delivery_request_created , 
+      message: appMessages.message.shopper.delivery_request_created , 
       status: statusApp,
       data: body
     };
@@ -28,12 +29,14 @@ module.exports = {
     body.userId = req.user._id;
     body.created = new Date().getTime();    
     //validate if application exists already
-    formerApply = await JobApply.findOne({userId: body.userId});
-    if (formerApply){      
-      response.message =  messages.message.shopper.delivery_failed;
-      response.status = 401;
+    formerApply = await JobApply.findOne({userId: body.userId, isActive: true});
+    if (formerApply)
+    {      
+      response.message =  appMessages.message.shopper.delivery_failed;
+      response.status = appStatus.status.unauthorized.code;
       
-    }else{
+    }else
+    {
       mongoModel = await JobApply.create(body);  
     }
     res.status(status).json(response);
@@ -42,52 +45,56 @@ module.exports = {
   resolution: async (req, res, next) => {
 
     let status = 200;
-    let statusApp = 200;
+    let statusApp = appStatus.status.ok.code;
     const id = req.params.id;
     const body = req.body;
     let response = {
-      message: messages.message.shopper.admin_accepted,
+      message: appMessages.message.shopper.admin_accepted,
       status: statusApp,
       data: body
 
     };
     const updateJobApply = { isAccepted: body.accepted, isActive:body.accepted }
     const updateShopper = { isActive:body.accepted }
-    if(! body.accepted){      
-      response.message =  messages.message.shopper.admin_rejected;
-      response.status = 401;
-    }
-    responseModel = await JobApply.findOneAndUpdate({userId: id}, updateJobApply);
-    if (body.accepted){
-      console.log(responseModel);
-      formerShopper = await Shopper.findOne({userId: body.userId});
-      console.log(formerShopper);
-      if(! formerShopper){
-        let saveShopper = {
+    
+    
+    let responseModel = await JobApply.findOneAndUpdate({userId: id}, updateJobApply);    
+    formerShopper = await Shopper.findOne({userId: id});
+    console.log(formerShopper);
+    if(! formerShopper)
+    {
+      const saveShopper = {
           userId : responseModel.userId,
           phone : responseModel.phone,
           name : responseModel.name,
-          isActive: body.accepted
-        };
-        mongoModel = await Shopper.create(saveShopper);  
-      }else{
-        await Shopper.findOneAndUpdate({userId: id}, updateShopper);    
-      }
-
+          isActive: body.accepted,  
+          isAccepted: body.accepted,        
+      };
+      mongoModel = await Shopper.create(saveShopper);  
+    }else
+    {
+      
+      console.log(updateShopper);
+      await Shopper.findOneAndUpdate({userId: id}, updateShopper);    
     }
-    
 
+    //change status,message
+    if(! body.accepted)
+    {      
+      response.message =  appMessages.message.shopper.admin_rejected;
+      response.status = appStatus.status.unauthorized.code;
+    }
     res.status(status).json(response);
    
   },
 
   all: async (req, res, next) => {
 
-    let status = 200;
-    let statusApp = 200;
+    let status = 200; //server
+    let statusApp = appStatus.status.ok.code;
     let response = {
       data: [],
-      message: 'OK',
+      message: appStatus.status.ok.description,
       status: statusApp
     }
     const defaultNumberOfRecords = 20;
@@ -96,22 +103,22 @@ module.exports = {
     let pageNumber = 0;
     let numberOfRecords = defaultNumberOfRecords;
     //check inputs is not numeric
-    if(! (/^\d+$/.test(page)) ){
+    if(! (/^\d+$/.test(page)) )
+    {
       pageNumber        = 0;
       numberOfRecords   = 0;
-      response.status   = 400;
-      response.message  = messages.message.general.not_a_number;
-    }else{
-      if(Number(page) > 1){
+      response.status   = appStatus.status.bad_request.code;
+      response.message  = appMessages.message.general.not_a_number;
+    }else
+    {
+      if(Number(page) > 1)
+      {
         pageNumber = Number(page)*numberOfRecords;
       }
       numberOfRecords = Number(records);
 
     }
-    console.log(pageNumber);
-    console.log(numberOfRecords);
     const data = await JobApply.find({isActive:true}).skip(pageNumber).limit(numberOfRecords);
-    console.log(data);
     response.data = data;
     res.status(status).json(response);
   }
