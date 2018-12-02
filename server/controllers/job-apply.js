@@ -26,7 +26,7 @@ module.exports = {
     };
     
     body.userId = req.user._id;
-    body.create = time();    
+    body.created = new Date().getTime();    
     //validate if application exists already
     formerApply = await JobApply.findOne({userId: body.userId});
     if (formerApply){      
