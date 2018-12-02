@@ -14,5 +14,7 @@ router.route('/jobs/apply')
 router.route('/jobs/all')
   .post(passportJWT, applyController.all);
 
+router.route('/jobs/resolution/:id')
+  .post(passportJWT, applyController.resolution);
 
 module.exports = router;
