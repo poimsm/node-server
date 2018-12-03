@@ -46,6 +46,9 @@ router.route('/store/important/:id')
   .put(passportJWT, storeController.mark);
 
 // -----------  Explore Service Manage --------------------
+router.route('/explore-service/all')
+  .get(passportJWT, exploreServiceController.all);
+
 router.route('/explore-service/important')
   .get(passportJWT, exploreServiceController.important);
 
