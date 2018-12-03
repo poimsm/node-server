@@ -77,18 +77,19 @@ module.exports = {
       status: statusApp
     }
     const marked        = {
-      storeId: id,
+      store: id,
       created: new Date().getTime(),
       mark: body.mark
     }
     const updateStoreImp = {
       mark: body.mark
     }
-    formerStore = await StoreImportant.findOne({storeId: id, isActive: true});
+    formerStore = await StoreImportant.findOne({store: id, isActive: true});
     if(! formerStore){
+      console.log("CREAR");
       await StoreImportant.create(marked);
     }else{
-      let responseModel = await StoreImportant.findOneAndUpdate({storeId: id}, updateStoreImp);
+      let responseModel = await StoreImportant.findOneAndUpdate({store: id}, updateStoreImp);
       response.data = marked;
     }
     res.status(status).json(response);
@@ -106,6 +107,7 @@ module.exports = {
     const defaultNumberOfRecords = 20;
     const page          = req.query.page || 0;    
     const records       = req.query.records || defaultNumberOfRecords;
+    const mark       = req.query.mark || true;
     let pageNumber      = 0;
     let numberOfRecords = defaultNumberOfRecords;
     //check inputs is not numeric
@@ -124,7 +126,11 @@ module.exports = {
       numberOfRecords   = Number(records);
 
     }
-    const data          = await Store.find({isActive:true}).skip(pageNumber).limit(numberOfRecords);
+    console.log(mark);
+    const data          = await StoreImportant.find({isActive:true, mark: mark})
+              .populate('store','name phone category')
+              .skip(pageNumber)
+              .limit(numberOfRecords);
     response.data       = data;
     res.status(status).json(response);    
   },

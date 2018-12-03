@@ -42,7 +42,7 @@ router.route('/store/important')
   .get(passportJWT, storeController.important);
 
 router.route('/store/important/:id')
-  .post(passportJWT, storeController.mark);
+  .put(passportJWT, storeController.mark);
 
 
 module.exports = router;
