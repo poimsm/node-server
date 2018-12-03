@@ -51,7 +51,8 @@ module.exports = {
    
         body.imgs = uploadsObj;
         body.created = new Date().getTime();
-        body.user = req.user._id;   
+        let store = await Store.find({userId: req.user._id, isActive: true});
+        body.store = store._id;
         
         const service = new Service(body);
         
