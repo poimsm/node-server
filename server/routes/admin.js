@@ -5,6 +5,7 @@ const passport = require('passport');
 const jobsController = require('../controllers/job-apply');
 const storeApplyController = require('../controllers/store-apply');
 const storeController = require('../controllers/stores');
+const exploreServiceController = require('../controllers/explore-services');
 
 const passportJWT = passport.authenticate('jwt', { session: false });
 
@@ -44,5 +45,11 @@ router.route('/store/important')
 router.route('/store/important/:id')
   .put(passportJWT, storeController.mark);
 
+// -----------  Explore Service Manage --------------------
+router.route('/explore-service/important')
+  .get(passportJWT, exploreServiceController.important);
+
+router.route('/explore-service/important/:id')
+  .put(passportJWT, exploreServiceController.mark);
 
 module.exports = router;
