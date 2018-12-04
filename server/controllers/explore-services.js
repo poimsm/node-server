@@ -176,6 +176,7 @@ module.exports = {
       isActive: body.mark
     }
     const updateServiceExplore = {
+      isActive: body.mark,
       mark: body.mark
     }
     formerServiceExplore = await ServiceImportant.findOne({exploreService: id, isActive: true});
