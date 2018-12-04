@@ -58,7 +58,7 @@ module.exports = {
     const updateShopper = { isActive:body.accepted }
     
     
-    let responseModel = await JobApply.findOneAndUpdate({userId: id}, updateJobApply);    
+    let responseModel = await JobApply.findOneAndUpdate({userId: id, isActive:true}, updateJobApply);    
     formerShopper = await Shopper.findOne({userId: id});
     console.log(formerShopper);
     if(! formerShopper)
@@ -75,7 +75,7 @@ module.exports = {
     {
       
       console.log(updateShopper);
-      await Shopper.findOneAndUpdate({userId: id}, updateShopper);    
+      await Shopper.findOneAndUpdate({userId: id, isActive:true}, updateShopper);    
     }
 
     //change status,message

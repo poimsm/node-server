@@ -58,7 +58,7 @@ module.exports = {
     const updateStore = { isActive:body.accepted }
     
     
-    let responseModel = await StoreApply.findOneAndUpdate({userId: id}, updateStoreApply);    
+    let responseModel = await StoreApply.findOneAndUpdate({userId: id, isActive:true}, updateStoreApply);    
     formerStore = await Store.findOne({userId: id});
     console.log(formerStore);
     if(! formerStore)
@@ -75,7 +75,7 @@ module.exports = {
     {
       
       console.log(updateStore);
-      await Store.findOneAndUpdate({userId: id}, updateStore);    
+      await Store.findOneAndUpdate({userId: id, isActive:true}, updateStore);    
     }
 
     //change status,message
