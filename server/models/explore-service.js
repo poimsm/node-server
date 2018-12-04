@@ -17,7 +17,8 @@ var exploreServiceSchema = new Schema({
     buys: { type: Number },
     totalStartsGiven: { type: Number },
     sumAllStarts: { type: Number },
-    startsAverage: { type: Number }
+    startsAverage: { type: Number },
+    isActive: { type: Boolean, default: true }
 });
 
 
