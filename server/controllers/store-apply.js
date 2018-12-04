@@ -67,6 +67,7 @@ module.exports = {
           userId : responseModel.userId,
           phone : responseModel.phone,
           name : responseModel.name,
+          category: responseModel.category,
           isActive: body.accepted,  
           isAccepted: body.accepted,        
       };

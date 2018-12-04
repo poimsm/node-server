@@ -1,7 +1,10 @@
 const JWT = require('jsonwebtoken');
 const cloudinary = require("cloudinary");
 const Service = require('../models/explore-service');
-
+const Store = require('../models/store');
+const ServiceImportant = require('../models/explore-service-important');
+const appMessages = require('./utils/messages');
+const appStatus = require('./utils/app-status');
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_NAME,
@@ -38,7 +41,8 @@ module.exports = {
     for (const img of imgs) {
         promises.push(uploader(img));
       }
-
+    body.created = new Date().getTime();
+    let store = await Store.find({userId: req.user._id, isActive: true});
     Promise.all(promises).then( uploads => {
 
         const uploadsObj = {}
@@ -48,8 +52,8 @@ module.exports = {
         })
    
         body.imgs = uploadsObj;
-        body.created = new Date().getTime();
-        body.user = req.user._id;   
+        
+        body.store = store._id;
         
         const service = new Service(body);
         
@@ -67,24 +71,38 @@ module.exports = {
 
   all: async (req, res, next) => {
 
-    const desde = req.query.desde || 0;
-    const limite = req.query.limite || 2;
+    let status        = 200; //server
+    let statusApp     = appStatus.status.ok.code;
+    let response      = {
+      data: [],
+      message: appStatus.status.ok.description,
+      status: statusApp
+    }
+    const defaultNumberOfRecords = 20;
+    const page          = req.query.page || 0;    
+    const records       = req.query.records || defaultNumberOfRecords;
+    let pageNumber      = 0;
+    let numberOfRecords = defaultNumberOfRecords;
+    //check inputs is not numeric
+    if(! (/^\d+$/.test(page)) )
+    {
+      pageNumber        = 0;
+      numberOfRecords   = 0;
+      response.status   = appStatus.status.bad_request.code;
+      response.message  = appMessages.message.general.not_a_number;
+    }else
+    {
+      if(Number(page) > 1)
+      {
+        pageNumber      = Number(page)*numberOfRecords;
+      }
+      numberOfRecords   = Number(records);
 
-    desde = Number(desde);
-    limite = Number(limite);
-
-    Ticket.find({})
-    // .skip(desde)
-    // .limit(limite)
-    // .sort('category')
-    // .populate('user', 'name')
-    .exec((err, cupones) => {
-
-        if (err) {
-            return res.status(500).json({ err  });
-        }
-        res.status(200).json({ cupones });
-    })
+    }
+    console.log(numberOfRecords);
+    const data          = await Service.find({isActive:true}).skip(pageNumber).limit(numberOfRecords);
+    response.data       = data;
+    res.status(status).json(response);
   },
 
   one: async (req, res, next) => {
@@ -136,5 +154,78 @@ module.exports = {
 
     });
 
-  }
+  },
+    
+    //MANAGE EXPLORE SERVICE
+
+  mark: async (req, res, next) => {
+
+    let status          = 200; //server
+    const id            = req.params.id;
+    const body          = req.body; 
+    let statusApp     = appStatus.status.ok.code;
+    let response      = {
+      data: [],
+      message: appStatus.status.ok.description,
+      status: statusApp
+    }
+    const marked        = {
+      exploreService: id,
+      created: new Date().getTime(),
+      mark: body.mark
+    }
+    const updateServiceExplore = {
+      mark: body.mark
+    }
+    formerServiceExplore = await ServiceImportant.findOne({exploreService: id, isActive: true});
+    if(! formerServiceExplore){
+      console.log("CREAR");
+      await ServiceImportant.create(marked);
+    }else{
+      let responseModel = await ServiceImportant.findOneAndUpdate({exploreService: id}, updateServiceExplore);
+      response.data = marked;
+    }
+    res.status(status).json(response);
+  },
+  
+  important: async (req, res, next) => {
+
+    let status          = 200; //server
+    let statusApp       = appStatus.status.ok.code;
+    let response        = {
+      data: [],
+      message: appStatus.status.ok.description,
+      status: statusApp
+    }
+    const defaultNumberOfRecords = 20;
+    const page          = req.query.page || 0;    
+    const records       = req.query.records || defaultNumberOfRecords;
+    const mark       = req.query.mark || true;
+    let pageNumber      = 0;
+    let numberOfRecords = defaultNumberOfRecords;
+    //check inputs is not numeric
+    if(! (/^\d+$/.test(page)) )
+    {
+      pageNumber        = 0;
+      numberOfRecords   = 0;
+      response.status   = appStatus.status.bad_request.code;
+      response.message  = appMessages.message.general.not_a_number;
+    }else
+    {
+      if(Number(page) > 1)
+      {
+        pageNumber      = Number(page)*numberOfRecords;
+      }
+      numberOfRecords   = Number(records);
+
+    }
+    console.log(mark);
+    const data          = await ServiceImportant.find({isActive:true, mark: mark})
+              .populate('exploreService','category title description price imgs')
+              .skip(pageNumber)
+              .limit(numberOfRecords);
+    response.data       = data;
+    res.status(status).json(response);    
+  },
+
 }

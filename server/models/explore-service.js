@@ -13,12 +13,13 @@ var exploreServiceSchema = new Schema({
     lists: { type: Object },
     activeDays: { type: Object },
     created: { type: Number },
-    user: { type: Schema.Types.ObjectId, ref: 'User' },
+    store: { type: Schema.Types.ObjectId, ref: 'Store' },
     buys: { type: Number },
     totalStartsGiven: { type: Number },
     sumAllStarts: { type: Number },
-    startsAverage: { type: Number }
+    startsAverage: { type: Number },
+    isActive: { type: Boolean, default: true }
 });
 
 
-module.exports = mongoose.model('explore_service', exploreServiceSchema);
+module.exports = mongoose.model('ExploreService', exploreServiceSchema);

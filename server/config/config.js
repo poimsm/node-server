@@ -5,7 +5,7 @@ process.env.PORT = process.env.PORT || 3000;
 process.env.NODE_ENV = process.env.NODE_ENV || 'dev'
 
 //  Token
-process.env.JWT_EXPIRATION = '1d';
+process.env.JWT_EXPIRATION = '30d';
 process.env.JWT_SECRET = process.env.JWT_SECRET || 'el-seed-de-desarrollo';
 
 //  MongoDB
