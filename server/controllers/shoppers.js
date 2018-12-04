@@ -15,6 +15,9 @@ cloudinary.config({
 
 module.exports = { 
 
+  takeOrder: async (req, res, next) => {
+
+  },
   available: async (req, res, next) => {
 
    const day = req.query.day;

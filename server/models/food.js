@@ -11,7 +11,7 @@ var foodSchema = new Schema({
     },
     lists: { type: Object },
     created: { type: Number },
-    user: { type: Schema.Types.ObjectId, ref: 'User' },
+    store: { type: Schema.Types.ObjectId, ref: 'Store' },
     buys: { type: Number },
     totalStartsGiven: { type: Number },
     sumAllStarts: { type: Number },

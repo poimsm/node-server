@@ -4,6 +4,7 @@ const passport = require('passport');
 
 const jobsController = require('../controllers/jobs');
 const shoppersController = require('../controllers/shoppers');
+const takeOrderController = require('../controllers/take-order');
 const storesController = require('../controllers/stores');
 const ordersController = require('../controllers/orders');
 const payController = require('../controllers/pay-delivery');
@@ -44,7 +45,28 @@ router.route('/delivery/stores/:id')
 router.route('/delivery/stores')
   .post(passportJWT, storesController.create);
 
+// -----------  Orders status  --------------------
+
+//router.route('/delivery/orders/update')
+//  .put(passportJWT, shoppersController.update);
+
 // -----------  Orders  --------------------
+router.route('/orders/take')
+  .get(passportJWT, takeOrderController.create);
+
+router.route('/orders/available')
+  .get(passportJWT, takeOrderController.available);
+
+router.route('/orders/taken')
+  .get(passportJWT, takeOrderController.taken);
+
+router.route('/orders/current')
+  .get(passportJWT, takeOrderController.current);
+
+
+////////////////////
+
+
 router.route('/delivery/orders/active')
   .get(passportJWT, ordersController.active);
 

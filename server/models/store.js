@@ -5,6 +5,7 @@ var storeSchema = new Schema({
     userId: { type: String },
     category: { type: String },
     name: { type: String },
+    address: { type: String, default: '' },
     phone: { type: Number },
     created: { type: Number },
     isActive: { type: Boolean, default: true }
