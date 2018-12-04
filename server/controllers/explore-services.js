@@ -99,6 +99,7 @@ module.exports = {
       numberOfRecords   = Number(records);
 
     }
+    console.log(numberOfRecords);
     const data          = await Service.find({isActive:true}).skip(pageNumber).limit(numberOfRecords);
     response.data       = data;
     res.status(status).json(response);
