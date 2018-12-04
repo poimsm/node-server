@@ -172,7 +172,8 @@ module.exports = {
     const marked        = {
       exploreService: id,
       created: new Date().getTime(),
-      mark: body.mark
+      mark: body.mark,
+      isActive: body.mark
     }
     const updateServiceExplore = {
       mark: body.mark
@@ -182,7 +183,7 @@ module.exports = {
       console.log("CREAR");
       await ServiceImportant.create(marked);
     }else{
-      let responseModel = await ServiceImportant.findOneAndUpdate({exploreService: id}, updateServiceExplore);
+      let responseModel = await ServiceImportant.findOneAndUpdate({exploreService: id,isActive: true}, updateServiceExplore);
       response.data = marked;
     }
     res.status(status).json(response);
