@@ -7,7 +7,8 @@ var storeApplySchema = new Schema({
     name: { type: String },
     phone: { type: Number },
     created: { type: Number },
-    isActive: { type: Boolean, default: true }
+    isActive: { type: Boolean, default: true },
+    isAccepted: { type: Boolean, default: false }
 });
 
 

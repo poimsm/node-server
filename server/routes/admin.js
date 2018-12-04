@@ -28,9 +28,6 @@ router.route('/store-category/apply')
 router.route('/store-category/all')
   .get(passportJWT, storeApplyController.all);
 
-
-
-
 router.route('/store/resolution/:id')
   .post(passportJWT, storeApplyController.resolution);
 
